@@ -1,4 +1,5 @@
 const { Client, IntentsBitField } = require('discord.js');
+const data = require("../token.json");
 
 const client = new Client({
     intents: [
@@ -14,8 +15,13 @@ client.on('ready' ,(e) => {
 })
 
 client.on('messageCreate', (msg) => {
-    if (msg.content == "hola") {
+    if (!msg.author.bot){
+        if (msg.content == "hola") {
+            msg.reply("hola")
+        }
     }
+
+    
 })
 
-client.login("MTE1Mzc0Mzc4MTYyNDAyMTAxMg.GuVXo3.LPIahGpD0MwXbP8V2mpxgGeENlhOutr5LpwUNc")
+client.login(data.token)
