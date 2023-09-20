@@ -1,5 +1,6 @@
 const { Client, IntentsBitField } = require('discord.js');
-const data = require("../token.json");
+const commands = require('./commands');
+require('dotenv').config();
 
 const client = new Client({
     intents: [
@@ -10,18 +11,20 @@ const client = new Client({
     ]
 });
 
-client.on('ready' ,(e) => {
-    console.log(`💪 ${e.user.tag} en linea`);
-})
+client.on('ready', (e) => {
+    console.log(`${e.user.tag} online`);
+});
 
-client.on('messageCreate', (msg) => {
-    if (!msg.author.bot){
-        if (msg.content == "hola") {
-            msg.reply("hola")
-        }
+const commandMap = new Map();
+commands.forEach(command => {
+    commandMap.set(command.name, command.reply);
+});
+
+client.on('interactionCreate', (interaction) => {
+    if (!interaction.isChatInputCommand()) { return; }
+    if (commandMap.has(interaction.commandName)) {
+        interaction.reply(commandMap.get(interaction.commandName))
     }
+});
 
-    
-})
-
-client.login(data.token)
+client.login(process.env.TOKEN);
